@@ -1,11 +1,16 @@
+import random
+from datacenter.models import Schoolkid, Mark, Chastisement, Subject, Lesson, Commendation
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+
+
 def get_schoolkid(name):
     try:
         schoolkid = Schoolkid.objects.filter(full_name__contains=name).get()
         return schoolkid
     except ObjectDoesNotExist:
-        print('Такого ученика нет')
+        print('Такого ученика нет, проверьте правильность имени и повторите команду')
     except MultipleObjectsReturned:
-        print('Найдено несколько имен')
+        print('Найдено несколько имен, повторите команду, уточнив фамилию и отчество')
     return
 
 
@@ -20,12 +25,18 @@ def remove_chastisements(schoolkid):
     Chastisement.objects.filter(schoolkid=schoolkid).delete()
 
 
-def create_commendation(schoolkid, subject):
-    subject = Subject.objects.filter(title=subject, year_of_study=6)[0]
-    lesson = Lesson.objects.filter(year_of_study=6, group_letter='А', subject=subject)[0]
+def create_commendation(schoolkid, subject, text='Хвалю!'):
+    try:
+        subject = Subject.objects.filter(title=subject, year_of_study=6)[0]
+    except IndexError:
+        print('Проверьте правильность названия предмета и введите команду повторно')
+        return
+    lessons = Lesson.objects.filter(
+        year_of_study=6, group_letter='А', subject=subject)
+    lesson = lessons[random.randint(0, len(lessons))]
     date = lesson.date
     teacher = lesson.teacher
-    Commendation.objects.create(text='Хвалю!',
+    Commendation.objects.create(text=text,
                                 created=date,
                                 schoolkid=schoolkid,
                                 subject=subject,
