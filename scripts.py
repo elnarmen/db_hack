@@ -7,10 +7,9 @@ def get_schoolkid(name):
         schoolkid = Schoolkid.objects.filter(full_name__contains=name).get()
         return schoolkid
     except Schoolkid.DoesNotExist:
-        print('Такого ученика нет, проверьте правильность имени и повторите команду')
+        raise DoesNotExist('Такого ученика нет, проверьте правильность имени')
     except Schoolkid.MultipleObjectsReturned:
-        print('Найдено несколько имен, повторите команду, уточнив фамилию и отчество')
-    return
+        raise MultipleObjectsReturned('Найдено несколько учеников, уточните ФИО')
 
 
 def fix_marks(schoolkid):
@@ -40,3 +39,4 @@ def create_commendation(schoolkid, subject, text='Хвалю!'):
                                 schoolkid=schoolkid,
                                 subject=subject,
                                 teacher=teacher)
+    
