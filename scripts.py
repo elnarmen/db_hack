@@ -1,15 +1,14 @@
 import random
 from datacenter.models import Schoolkid, Mark, Chastisement, Subject, Lesson, Commendation
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 
 def get_schoolkid(name):
     try:
         schoolkid = Schoolkid.objects.filter(full_name__contains=name).get()
         return schoolkid
-    except ObjectDoesNotExist:
+    except Schoolkid.DoesNotExist:
         print('Такого ученика нет, проверьте правильность имени и повторите команду')
-    except MultipleObjectsReturned:
+    except Schoolkid.MultipleObjectsReturned:
         print('Найдено несколько имен, повторите команду, уточнив фамилию и отчество')
     return
 
