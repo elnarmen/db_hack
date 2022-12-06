@@ -24,8 +24,10 @@ def create_commendation(schoolkid, subject, text='Хвалю!'):
     year_of_study = schoolkid.year_of_study
     group_letter = schoolkid.group_letter
     subject = Subject.objects.filter(title=subject, year_of_study=year_of_study).first()
-    lessons = Lesson.objects.filter(year_of_study=year_of_study, group_letter=group_letter, subject=subject)
-    lesson = lessons[random.randint(0, len(lessons))]
+    lessons = Lesson.objects.filter(year_of_study=year_of_study,
+                                    group_letter=group_letter,
+                                    subject=subject).order_by('date')
+    lesson = random.choice(lessons)
     date = lesson.date
     teacher = lesson.teacher
     if not subject:
