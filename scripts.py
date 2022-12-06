@@ -13,10 +13,7 @@ def get_schoolkid(name):
 
 
 def fix_marks(schoolkid):
-    bad_marks = Mark.objects.filter(schoolkid=schoolkid, points__lt=4)
-    for mark in bad_marks:
-        mark.points = 5
-        mark.save()
+    Mark.objects.filter(schoolkid=schoolkid, points__lt=4).update(points=5)
 
 
 def remove_chastisements(schoolkid):
@@ -39,4 +36,3 @@ def create_commendation(schoolkid, subject, text='Хвалю!'):
                                 schoolkid=schoolkid,
                                 subject=subject,
                                 teacher=teacher)
-    
